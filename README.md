@@ -26,12 +26,12 @@ Fetch orders using query parameters (as per assignment requirement)
 
 ```bash
 # Ingest orders
-curl -X POST http://localhost:5000/api/ingest-orders
+cPOST "http://localhost:5000/api/ingest-orders"
 
 # Get customer orders (path param)
-curl http://localhost:5000/api/customer/test@example.com
+iwr -Uri "http://localhost:5000/api/customer/test@example.com"
 
 # Get customer orders (query param - recommended)
-curl "http://localhost:5000/api/orders?email=test@example.com"
+iwr -Uri "http://localhost:5000/api/orders?email=test@example.com"
 
-curl "http://localhost:5000/api/orders?phone=1234567890"
+iwr -Uri  "http://localhost:5000/api/orders?phone=1234567890"
