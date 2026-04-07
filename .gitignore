@@ -1,0 +1,20 @@
+# Virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Database
+instance/
+orders.db
+
+# Env variables
+.env
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
