@@ -18,3 +18,5 @@ orders.db
 
 # OS files
 .DS_Store
+
+sqlite3.exe
