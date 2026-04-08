@@ -3,16 +3,35 @@
 A Flask service that ingests ecommerce orders from a mock API and serves them via REST API.
 
 ## Setup
-1. Clone the repo
-2. Install dependencies: `pip install -r requirements.txt`
-3. Set Flask app (required for migrations):
+1. Clone the repo:
+   git clone https://github.com/donsquido/Order_Service.git
+   cd Order_Service
+
+2. Create and activate virtual environment:
+   python -m venv venv
+   venv\Scripts\activate   # Windows
+   source venv/bin/activate # Linux/Mac
+  
+3. Install dependencies: `pip install -r requirements.txt`
+
+4. Set Flask app (required for migrations):
    Windows:
    `set FLASK_APP=run.py`
    Linux/Mac:
    `export FLASK_APP=run.py`
-4. Initialize database: `flask db init && flask db migrate && flask db upgrade`
-5. Run the service: `python run.py`
-6.  Test API:
+
+5. Initialize database: 
+   Run the following command to apply existing migrations and create tables:
+   `flask db upgrade`
+   OR
+   If you want to make changes to the models (e.g., add new fields or tables) then run:
+   `flask db init`      # only once, if migrations folder does not exist
+   `flask db migrate`   # generates migration scripts based on model changes
+   `flask db upgrade`   # apply the new migrations
+
+6. Run the service: `python run.py`
+
+7.  Test API:
    - Windows PowerShell: `iwr -Uri "http://localhost:5000/api/orders?email=demo1@example.com" -UseBasicParsing`
    - Linux/Mac: `curl "http://localhost:5000/api/orders?email=demo1@example.com"`
 
