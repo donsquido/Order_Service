@@ -26,7 +26,8 @@ Fetch orders using query parameters (as per assignment requirement)
 
 ```bash
 # Ingest orders
-cPOST "http://localhost:5000/api/ingest-orders"
+iwr -Uri "http://localhost:5000/api/ingest-orders" -Method POST
+
 
 # Get customer orders (path param)
 iwr -Uri "http://localhost:5000/api/customer/test@example.com"

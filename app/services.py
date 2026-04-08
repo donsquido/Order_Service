@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class OrderService:
-    API_URL = "https://mocki.io/v1/32fbc0ab-7bfe-40fa-96c3-d1cadedb5d2a"
+    API_URL = "https://wrong-url.com"  # Replace with actual API endpoint
     MAX_RETRIES = 3
     
     @classmethod
@@ -44,6 +44,7 @@ class OrderService:
                 if attempt < cls.MAX_RETRIES - 1:
                     time.sleep(2 ** attempt)  # Exponential backoff
                 else:
+                    logger.error("All attempts failed.")
                     return {"status": "error", "message": str(e)}
             except Exception as e:
                 logger.exception(f"Error processing orders")
@@ -92,7 +93,7 @@ class OrderService:
                 )
                 db.session.add(order_item)
             
-            # 🔥 DB-level idempotency protection
+            # DB-level idempotency protection
             try:
                 db.session.commit()
                 logger.info(f"Successfully stored order {order_id}")
