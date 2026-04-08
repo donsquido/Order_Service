@@ -12,6 +12,10 @@ A Flask service that ingests ecommerce orders from a mock API and serves them vi
    `export FLASK_APP=run.py`
 4. Initialize database: `flask db init && flask db migrate && flask db upgrade`
 5. Run the service: `python run.py`
+6.  Test API:
+   - Windows PowerShell: `iwr -Uri "http://localhost:5000/api/orders?email=demo1@example.com" -UseBasicParsing`
+   - Linux/Mac: `curl "http://localhost:5000/api/orders?email=demo1@example.com"`
+
 
 ## API Endpoints
 
@@ -19,24 +23,23 @@ A Flask service that ingests ecommerce orders from a mock API and serves them vi
 - `GET /api/customer/{email|phone}` - Get customer orders (404 if not found)
 - `GET /api/health` - Health check
 
-### Additional Endpoint (Query आधारित)
-- `GET /api/orders?email=<email>`  
-- `GET /api/orders?phone=<phone>`  
-Fetch orders using query parameters (as per assignment requirement)
-
 ---
 
-## Example Usage
+## Example Commands
 
-```bash
+---For Windows use `"iwr -Uri"` & For Linux/Mac use `"curl"`
 # Ingest orders
-iwr -Uri "http://localhost:5000/api/ingest-orders" -Method POST
-
+`iwr -Uri "http://localhost:5000/api/ingest-orders"`
+`curl "http://localhost:5000/api/ingest-orders"`
 
 # Get customer orders (path param)
-iwr -Uri "http://localhost:5000/api/customer/test@example.com"
+`iwr -Uri "http://localhost:5000/api/customer/test@example.com"`
+`curl "http://localhost:5000/api/customer/test@example.com"`
 
-# Get customer orders (query param - recommended)
-iwr -Uri "http://localhost:5000/api/orders?email=test@example.com"
+# Get customer orders(email, phone)
+`iwr -Uri "http://localhost:5000/api/orders?email=test@example.com"`
+`curl"http://localhost:5000/api/orders?email=test@example.com"`
 
-iwr -Uri  "http://localhost:5000/api/orders?phone=1234567890"
+`iwr -Uri  "http://localhost:5000/api/orders?phone=1234567890"`
+`curl "http://localhost:5000/api/orders?phone=1234567890"`
+
