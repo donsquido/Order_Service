@@ -52,13 +52,13 @@ A Flask service that ingests ecommerce orders from a mock API and serves them vi
 `curl "http://localhost:5000/api/ingest-orders"`
 
 # Get customer orders (path param)
-`iwr -Uri "http://localhost:5000/api/customer/test@example.com"`
-`curl "http://localhost:5000/api/customer/test@example.com"`
+`iwr -Uri "http://localhost:5000/api/customer/demo1@example.com"`
+`curl "http://localhost:5000/api/customer/demo1@example.com"`
 
 # Get customer orders(email, phone)
-`iwr -Uri "http://localhost:5000/api/orders?email=test@example.com"`
-`curl"http://localhost:5000/api/orders?email=test@example.com"`
+`iwr -Uri "http://localhost:5000/api/orders?email=demo2@example.com"`
+`curl"http://localhost:5000/api/orders?email=demo2@example.com"`
 
-`iwr -Uri  "http://localhost:5000/api/orders?phone=1234567890"`
-`curl "http://localhost:5000/api/orders?phone=1234567890"`
+`iwr -Uri  "http://localhost:5000/api/orders?phone=1111111111"`
+`curl "http://localhost:5000/api/orders?phone=1111111111"`
 

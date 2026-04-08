@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class OrderService:
-    API_URL = "https://wrong-url.com"  # Replace with actual API endpoint
+    API_URL = "https://mocki.io/v1/32fbc0ab-7bfe-40fa-96c3-d1cadedb5d2a"  # Replace with actual API endpoint
     MAX_RETRIES = 3
     
     @classmethod
