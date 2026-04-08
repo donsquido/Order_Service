@@ -3,11 +3,15 @@
 A Flask service that ingests ecommerce orders from a mock API and serves them via REST API.
 
 ## Setup
-
 1. Clone the repo
 2. Install dependencies: `pip install -r requirements.txt`
-3. Initialize database: `flask db init && flask db migrate && flask db upgrade`
-4. Run the service: `python run.py`
+3. Set Flask app (required for migrations):
+   Windows:
+   `set FLASK_APP=run.py`
+   Linux/Mac:
+   `export FLASK_APP=run.py`
+4. Initialize database: `flask db init && flask db migrate && flask db upgrade`
+5. Run the service: `python run.py`
 
 ## API Endpoints
 
