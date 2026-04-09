@@ -38,16 +38,35 @@ A Flask service that ingests ecommerce orders from a mock API and serves them vi
 The application uses a SQLite database (`order.db`) located in the `instance/` folder.  
 You can directly open and inspect this file using any SQLite viewer (e.g., DB Browser for SQLite).
 
-After running the seed script:
+### Option A: View Database via SQLite CLI
 
-```bash
-python seed.py
---- You can verify the inserted demo data using Flask shell:
+If you don’t want to run Python code in the terminal to check data, you can directly inspect the database file after seeding:
+
+1. Run migrations and seed data:
+   ```bash
+   ```flask db upgrade```
+   ```python seed.py```
+
+   Navigate to the instance folder:
+
+   ```cd instance```
+   Open the database using SQLite CLI (make sure SQLite is installed on your system):
+
+  ``` sqlite3 order.db```
+
+  Inside SQLite prompt, you can run commands like:
+
+  sql
+  .tables
+  SELECT * FROM customer;
+  SELECT * FROM "order";
+  SELECT * FROM order_item;
+OR
 
 flask shell
 Then run:
-from app.models import Customer, Order, OrderItem
 
+from app.models import Customer, Order, OrderItem
 for c in Customer.query.all():
     print(c.id, c.name)
 
@@ -57,6 +76,11 @@ for o in Order.query.all():
 for i in OrderItem.query.all():
     print(i.id, i.order_id, i.product_name, i.quantity)
 # This will display the database data accordingly just for overview
+
+OR
+
+
+
 
 6. Run the service: `python run.py`
 
