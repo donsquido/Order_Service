@@ -77,9 +77,6 @@ for i in OrderItem.query.all():
     print(i.id, i.order_id, i.product_name, i.quantity)
 # This will display the database data accordingly just for overview
 
-OR
-
-
 
 
 6. Run the service: `python run.py`
@@ -88,7 +85,22 @@ OR
    - Windows PowerShell: `iwr -Uri "http://localhost:5000/api/orders?email=demo1@example.com" -UseBasicParsing`
    - Linux/Mac: `curl "http://localhost:5000/api/orders?email=demo1@example.com"`
 
+## Running Tests
 
+This project includes basic unit tests for order creation, retry logic, idempotency, and error logging.
+
+To run all tests:
+
+``` For Windows:
+python -m unittest discover tests 
+
+Expected output:
+Success and failure cases for order creation.
+Retry logic.
+Idempotency and Error Logging stub.
+``` 
+
+All tests should complete with OK.
 ## API Endpoints
 
 - `POST /api/ingest-orders` - Fetch and store orders from external API
