@@ -49,4 +49,5 @@ def get_orders():
 
 @api_bp.route('/health', methods=['GET'])
 def health_check():
-    return jsonify({"status": "healthy"}), 200
+    """Lightweight health check endpoint"""
+    return jsonify({"status": "OK"}), 200
