@@ -58,7 +58,7 @@ class OrderService:
             logger.error("Invalid order format")
             return False
 
-        order_id = order_data.get('orderId') or order_data.get('id')
+        order_id = order_data.get('id')
         if not order_id:
             logger.error('Order data missing order ID')
             return False
@@ -76,20 +76,20 @@ class OrderService:
             order = Order(
                 order_id=order_id,
                 customer_id=customer.id,
-                total_amount=order_data.get('totalAmount', order_data.get('total_price', 0)),
+                total_amount=order_data.get('total', 0),
                 status=order_data.get('status', 'pending')
             )
             db.session.add(order)
             db.session.flush()  # Get order ID
             
             # Create order items
-            items = order_data.get('line_items') or order_data.get('items') or []
+            items = order_data.get('items', [])
             for item in items:
                 order_item = OrderItem(
                     order_id=order.id,
-                    product_name=item.get('productName') or item.get('sku'),
+                    product_name=item.get('name'),
                     quantity=item.get('quantity', 1),
-                    price=item.get('price', item.get('unit_price', 0))
+                    price=item.get('price', 0)
                 )
                 db.session.add(order_item)
             
