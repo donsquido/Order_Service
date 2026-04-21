@@ -1,129 +1,207 @@
 # Order Service
 
-A Flask service that ingests ecommerce orders from a mock API and serves them via REST API.
-
-## Setup
-1. Clone the repo:
-   git clone https://github.com/donsquido/Order_Service.git
-   cd Order_Service
-
-2. Create and activate virtual environment:
-   python -m venv venv
-   venv\Scripts\activate   # Windows
-   source venv/bin/activate # Linux/Mac
-  
-3. Install dependencies: `pip install -r requirements.txt`
-
-4. Set Flask app (required for migrations):
-   Windows:
-   `set FLASK_APP=run.py`
-   Linux/Mac:
-   `export FLASK_APP=run.py`
-
-5. Initialize database:  
-   Run the following command to apply existing migrations and create tables:  
-   `flask db upgrade`  
-
-   OR  
-
-   If you want to make changes to the models (e.g., add new fields or tables) then run:  
-   `flask db init`      # only once, if migrations folder does not exist  
-   `flask db migrate`   # generates migration scripts based on model changes  
-   `flask db upgrade`   # apply the new migrations  
+A Flask-based backend service that fetches ecommerce orders from an external API, stores them in a normalized SQLite database, and exposes REST APIs to query customer orders.
 
 ---
 
-## Database Access and Verification
+##  Features
 
-The application uses a SQLite database (`order.db`) located in the `instance/` folder.  
-You can directly open and inspect this file using any SQLite viewer (e.g., DB Browser for SQLite).
-
-### Option A: View Database via SQLite CLI
-
-If you don’t want to run Python code in the terminal to check data, you can directly inspect the database file after seeding:
-
-1. Run migrations and seed data:
-   ```bash
-   ```flask db upgrade```
-   ```python seed.py```
-
-   Navigate to the instance folder:
-
-   ```cd instance```
-   Open the database using SQLite CLI (make sure SQLite is installed on your system):
-
-  ``` sqlite3 order.db```
-
-  Inside SQLite prompt, you can run commands like:
-
-  sql
-  .tables
-  SELECT * FROM customer;
-  SELECT * FROM "order";
-  SELECT * FROM order_item;
-OR
-
-flask shell
-Then run:
-
-from app.models import Customer, Order, OrderItem
-for c in Customer.query.all():
-    print(c.id, c.name)
-
-for o in Order.query.all():
-    print(o.id, o.customer_id, o.total_amount)
-
-for i in OrderItem.query.all():
-    print(i.id, i.order_id, i.product_name, i.quantity)
-# This will display the database data accordingly just for overview
-
-
-
-6. Run the service: `python run.py`
-
-7.  Test API:
-   - Windows PowerShell: `iwr -Uri "http://localhost:5000/api/orders?email=demo1@example.com" -UseBasicParsing`
-   - Linux/Mac: `curl "http://localhost:5000/api/orders?email=demo1@example.com"`
-
-## Running Tests
-
-This project includes basic unit tests for order creation, retry logic, idempotency, and error logging.
-
-To run all tests:
-
-``` For Windows:
-python -m unittest discover tests 
-
-Expected output:
-Success and failure cases for order creation.
-Retry logic.
-Idempotency and Error Logging stub.
-``` 
-
-All tests should complete with OK.
-## API Endpoints
-
-- `POST /api/ingest-orders` - Fetch and store orders from external API
-- `GET /api/customer/{email|phone}` - Get customer orders (404 if not found)
-- `GET /api/health` - Health check
+* Fetch orders from external API and store in DB
+* Normalized database schema (Customer, Order, OrderItem)
+* Idempotent ingestion (prevents duplicate orders)
+* Query orders by email or phone
+* Proper error handling and logging
+* Basic unit tests included
 
 ---
 
-## Example Commands
+##  Tech Stack
 
----For Windows use `"iwr -Uri"` & For Linux/Mac use `"curl"`
-# Ingest orders
-`iwr -Uri "http://localhost:5000/api/ingest-orders"`
-`curl "http://localhost:5000/api/ingest-orders"`
+* Python + Flask
+* SQLite (lightweight DB for local/demo use)
+* SQLAlchemy (ORM)
+* Flask-Migrate (DB migrations)
 
-# Get customer orders (path param)
-`iwr -Uri "http://localhost:5000/api/customer/demo1@example.com"`
-`curl "http://localhost:5000/api/customer/demo1@example.com"`
+---
 
-# Get customer orders(email, phone)
-`iwr -Uri "http://localhost:5000/api/orders?email=demo2@example.com"`
-`curl"http://localhost:5000/api/orders?email=demo2@example.com"`
+##  Setup
 
-`iwr -Uri  "http://localhost:5000/api/orders?phone=1111111111"`
-`curl "http://localhost:5000/api/orders?phone=1111111111"`
+1. Clone the repository:
+
+```
+git clone https://github.com/donsquido/Order_Service.git
+cd Order_Service
+```
+
+2. Create virtual environment:
+
+```
+python -m venv venv
+venv\Scripts\activate
+```
+
+3. Install dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+4. Run database migrations:
+
+```
+set FLASK_APP=run.py
+flask db upgrade
+```
+
+5. (Optional) Seed demo data:
+
+```
+python seed.py
+```
+
+6. Start the server:
+
+```
+python run.py
+```
+
+---
+
+##  API Endpoints
+
+### Health Check
+
+```
+GET /api/health
+```
+
+### Ingest Orders (External API → DB)
+
+```
+POST /api/ingest-orders
+```
+
+### Get Customer Orders (Query Param)
+
+```
+GET /api/orders?email=<email>
+GET /api/orders?phone=<phone>
+```
+
+---
+
+##  Example Usage (Recommended: curl)
+
+### 1. Ingest Orders
+
+```
+curl.exe -X POST http://localhost:5000/api/ingest-orders
+```
+
+Expected:
+
+```
+{"status":"success","processed":1}
+```
+
+---
+
+### 2. Idempotency Check (Run Again)
+
+```
+curl.exe -X POST http://localhost:5000/api/ingest-orders
+```
+
+Expected:
+
+```
+{"status":"success","processed":0}
+```
+
+Ensures duplicate orders are not inserted.
+
+---
+
+### 3. Fetch Orders (Success Case)
+
+```
+curl.exe "http://localhost:5000/api/orders?email=thomas@avantcha.com"
+```
+
+---
+
+### 4. Customer Not Found
+
+```
+curl.exe "http://localhost:5000/api/orders?email=wrong@example.com"
+```
+
+Expected:
+
+```
+{"error":"Customer not found"}
+```
+
+---
+
+### 5. Missing Query Parameter
+
+```
+curl.exe http://localhost:5000/api/orders
+```
+
+Expected:
+
+```
+{"error":"Email or phone is required"}
+```
+
+---
+
+##  Design Decisions
+
+* **SQLite**: Used for simplicity and easy local setup (as per assignment scope)
+* **SQLAlchemy ORM**: Cleaner DB interactions and maintainability
+* **Normalized Schema**:
+
+  * Customer → Orders → OrderItems
+  * Avoids data duplication
+* **Idempotency**:
+
+  * Prevents duplicate order insertion using unique `order_id`
+* **Retry Logic**:
+
+  * Handles temporary API failures with retries
+
+---
+
+##  Running Tests
+
+Run all unit tests:
+
+```
+python -m unittest discover tests
+```
+
+Verbose mode:
+
+```
+python -m unittest discover tests -v
+```
+
+Expected:
+
+```
+Ran X tests
+OK
+```
+
+---
+
+## Notes
+
+* External API used:
+  https://mocki.io/v1/32fbc0ab-7bfe-40fa-96c3-d1cadedb5d2a
+
+* Some fields (like customer name) may default to `"Unknown"` if not provided by API.
 

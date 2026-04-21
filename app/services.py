@@ -76,7 +76,7 @@ class OrderService:
             order = Order(
                 order_id=order_id,
                 customer_id=customer.id,
-                total_amount=order_data.get('total', 0),
+                total_amount=order_data.get('total_price', 0),
                 status=order_data.get('status', 'pending')
             )
             db.session.add(order)
@@ -87,9 +87,9 @@ class OrderService:
             for item in items:
                 order_item = OrderItem(
                     order_id=order.id,
-                    product_name=item.get('name'),
+                    product_name=item.get('sku'),
                     quantity=item.get('quantity', 1),
-                    price=item.get('price', 0)
+                    price=item.get('unit_price', 0)
                 )
                 db.session.add(order_item)
             
