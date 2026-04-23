@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Service Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .links a {
+            display: inline-block;
+            margin-right: 15px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .links a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Order Service Dashboard</h1>
+
+<div class="card">
+    <h2>Customer Details</h2>
+
+    {% if data %}
+    <p><b>Name:</b> {{ data.customer.name }}</p>
+    <p><b>Email:</b> {{ data.customer.email }}</p>
+    <p><b>Phone:</b> {{ data.customer.phone }}</p>
+
+    <h3>Orders</h3>
+
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+        </tr>
+
+        {% for order in data.orders %}
+        <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.total_amount }}</td>
+            <td>{{ order.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+
+<div class="links">
+    <h3>Test Links</h3>
+
+    <a href="/view-orders?email=thomas@avantcha.com">View by Email</a>
+    <a href="/view-orders?phone=1111111111">View by Phone</a>
+    <a href="/view-orders?email=wrong@example.com">View Non-Existing</a>
+</div>
+
+</body>
+</html>

@@ -24,7 +24,7 @@ def create_app(config_class=Config):
     from app.api import api_bp
 
     # Register API blueprint
-    app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(api_bp)
 
     @app.route('/')
     def index():

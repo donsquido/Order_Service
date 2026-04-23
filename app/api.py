@@ -1,3 +1,4 @@
+from flask import render_template
 from flask import Blueprint, jsonify, request
 from app.services import order_service
 import logging
@@ -51,3 +52,31 @@ def get_orders():
 def health_check():
     """Lightweight health check endpoint"""
     return jsonify({"status": "OK"}), 200
+
+
+# UI HOME PAGE
+@api_bp.route('/')
+def home_page():
+    # auto fetch data so recruiter doesn't need to run ingest
+    order_service.fetch_and_store_orders()
+
+    data = order_service.get_orders_by_customer("thomas@avantcha.com")
+
+    return render_template("index.html", data=data)
+
+
+# VIEW ORDERS (EMAIL / PHONE)
+@api_bp.route('/view-orders')
+def view_orders_page():
+    from flask import request
+
+    email = request.args.get("email")
+    phone = request.args.get("phone")
+
+    identifier = email or phone
+    data = order_service.get_orders_by_customer(identifier)
+
+    if not data:
+        return render_template("error.html", message="Customer not found")
+
+    return render_template("orders.html", data=data)
