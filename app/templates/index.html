@@ -2,81 +2,91 @@
 <html>
 <head>
     <title>Order Service Dashboard</title>
+
     <style>
-        
-        body
-         {
-            font-family: 'Segoe UI', sans-serif;
+        body {
+            font-family: Arial;
             background-color: #f5f7fa;
-            margin: 40px;
+            padding: 20px;
         }
 
         h1 {
-            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 30px;
         }
 
         .card {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
 
         th {
             background-color: #4CAF50;
             color: white;
             padding: 10px;
+            text-align: center;
         }
 
         td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            text-align: center;
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .links a {
-            display: inline-block;
-            margin-right: 15px;
-            padding: 10px 15px;
-            background-color: #007BFF;
+        button {
+            padding: 6px 12px;
+            border: none;
+            background-color: #4CAF50;
             color: white;
-            text-decoration: none;
             border-radius: 5px;
+            cursor: pointer;
         }
 
-        .links a:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .items {
+            display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
+
 <body>
 
 <h1>Order Service Dashboard</h1>
-<h1>NEW UI LOADED........................</h1>
-<div class="card">
-    <h2>Customer Details</h2>
 
-    {% if data %}
+<!-- Customer Details -->
+<h2>Customer Details</h2>
+<div class="card">
     <p><b>Name:</b> {{ data.customer.name }}</p>
     <p><b>Email:</b> {{ data.customer.email }}</p>
     <p><b>Phone:</b> {{ data.customer.phone }}</p>
+</div>
 
-    <h3>Orders</h3>
+<!-- Orders -->
+<h2>Orders</h2>
+<div class="card">
 
     <table>
         <tr>
             <th>Order ID</th>
             <th>Total Amount</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
 
         {% for order in data.orders %}
@@ -84,19 +94,67 @@
             <td>{{ order.order_id }}</td>
             <td>{{ order.total_amount }}</td>
             <td>{{ order.status }}</td>
+            <td>
+                <button onclick="toggleItems('{{ order.order_id }}')">
+                    View Items
+                </button>
+            </td>
         </tr>
+
+        <!-- Hidden Items Row -->
+        <tr id="items-{{ order.order_id }}" class="items">
+            <td colspan="4">
+                <b>Items:</b>
+                <table>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                    </tr>
+
+                    {% for item in order["items"] %}
+                    <tr>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price }}</td>
+                    </tr>
+                    {% endfor %}
+
+                </table>
+            </td>
+        </tr>
+
         {% endfor %}
     </table>
-    {% endif %}
+
 </div>
 
-<div class="links">
-    <h3>Test Links</h3>
+<!-- Buttons -->
+<h2>Test Links</h2>
+<a href="/view-orders?email=thomas@avantcha.com">
+    <button>View by Email</button>
+</a>
 
-    <a href="/view-orders?email=thomas@avantcha.com">View by Email</a>
-    <a href="/view-orders?phone=1111111111">View by Phone</a>
-    <a href="/view-orders?email=wrong@example.com">View Non-Existing</a>
-</div>
+<a href="/view-orders?phone=1234567890">
+    <button>View by Phone</button>
+</a>
+
+<a href="/view-orders?email=wrong@test.com">
+    <button>View Non-Existing</button>
+</a>
+
+<!-- JS -->
+<script>
+function toggleItems(orderId) {
+    var el = document.getElementById("items-" + orderId);
+
+    if (el.style.display === "none" || el.style.display === "") {
+        el.style.display = "table-row";
+    } else {
+        el.style.display = "none";
+    }
+}
+</script>
 
 </body>
 </html>

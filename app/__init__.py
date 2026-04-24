@@ -11,6 +11,8 @@ migrate = Migrate()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.config["EXPLAIN_TEMPLATE_LOADING"] = True
 
     # Enable CORS
     CORS(app)
