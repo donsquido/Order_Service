@@ -22,12 +22,12 @@ def get_customer_orders(identifier):
     """Get customer orders by email or phone (path param version)"""
     logger.info(f"Fetching orders for customer: {identifier}")
 
-    customer_data = order_service.get_orders_by_customer(identifier)
+    data = order_service.get_orders_by_customer(identifier)
 
-    if not customer_data:
+    if not data:
         return jsonify({"error": "Customer not found"}), 404
 
-    return jsonify(customer_data), 200
+    return jsonify(data), 200
 
 
 @api_bp.route('/orders', methods=['GET'])
@@ -43,12 +43,12 @@ def get_orders():
 
     logger.info(f"Fetching orders using query param: {identifier}")
 
-    customer_data = order_service.get_orders_by_customer(identifier)
+    data = order_service.get_orders_by_customer(identifier)
 
-    if not customer_data:
+    if not data:
         return jsonify({"error": "Customer not found"}), 404
 
-    return jsonify(customer_data), 200
+    return jsonify(data), 200
 
 
 @api_bp.route('/health', methods=['GET'])
@@ -61,13 +61,15 @@ def health_check():
 @api_bp.route('/')
 def home_page():
     """Home page - auto fetch and display sample customer"""
-    
-    # Auto fetch data so recruiter doesn't need to run ingest manually
+
     order_service.fetch_and_store_orders()
 
-    data = order_service.get_orders_by_customer("thomas@avantcha.com")
+    raw_data = order_service.get_orders_by_customer("thomas@avantcha.com")
 
-    return render_template("index.html", data=data)
+    if not raw_data:
+        return render_template("error.html", message="Customer not found")
+
+    return render_template("index.html", data=raw_data)
 
 
 # VIEW ORDERS (EMAIL / PHONE)
@@ -83,9 +85,28 @@ def view_orders_page():
     if not identifier:
         return render_template("error.html", message="Email or phone required")
 
-    data = order_service.get_orders_by_customer(identifier)
+    raw_data = order_service.get_orders_by_customer(identifier)
 
-    if not data:
+    if not raw_data:
         return render_template("error.html", message="Customer not found")
 
-    return render_template("orders.html", data=data)
+    # ✅ Ensure structure matches UI expectation
+    formatted_data = {
+        "customer": {
+    "name": raw_data.get("customer", {}).get("name"),
+    "email": raw_data.get("customer", {}).get("email"),
+    "phone": raw_data.get("customer", {}).get("phone"),
+},
+        "orders": []
+    }
+
+    for order in raw_data.get("orders", []):
+        formatted_order = {
+            "order_id": order.get("order_id"),
+            "total_amount": order.get("total") or order.get("total_amount"),
+            "status": order.get("status"),
+            "items": order.get("items", [])
+        }
+        formatted_data["orders"].append(formatted_order)
+
+    return render_template("orders.html", data=formatted_data)

@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Order Service Dashboard</title>
     <style>
-        body {
+        
+        body
+         {
             font-family: 'Segoe UI', sans-serif;
             background-color: #f5f7fa;
             margin: 40px;
@@ -31,7 +32,6 @@
             background-color: #4CAF50;
             color: white;
             padding: 10px;
-            text-align: center;
         }
 
         td {
@@ -39,27 +39,8 @@
             border-bottom: 1px solid #ddd;
         }
 
-        /* NEW: alignment fixes */
-        td.amount {
-            text-align: center;
-        }
-        td.status {
-            text-align: center;
-        }
-        td.orderid {
-            text-align: center;
-        }
-
         tr:hover {
             background-color: #f1f1f1;
-        }
-
-        tr[onclick] {
-            cursor: pointer;
-        }
-
-        tr[onclick]:hover {
-            background-color: #e6f2ff;
         }
 
         .links a {
@@ -75,29 +56,19 @@
         .links a:hover {
             background-color: #0056b3;
         }
-
-        /* NEW: better inner table styling */
-        table table {
-            margin-top: 10px;
-            border: 1px solid #ddd;
-        }
-
-        table table th {
-            background-color: #6fbf73;
-        }
     </style>
 </head>
 <body>
 
 <h1>Order Service Dashboard</h1>
-
+<h1>NEW UI LOADED........................</h1>
 <div class="card">
     <h2>Customer Details</h2>
 
-    
-    <p><b>Name:</b> Unknown</p>
-    <p><b>Email:</b> thomas@avantcha.com</p>
-    <p><b>Phone:</b> None</p>
+    {% if data %}
+    <p><b>Name:</b> {{ data.customer.name }}</p>
+    <p><b>Email:</b> {{ data.customer.email }}</p>
+    <p><b>Phone:</b> {{ data.customer.phone }}</p>
 
     <h3>Orders</h3>
 
@@ -108,49 +79,15 @@
             <th>Status</th>
         </tr>
 
-        
-
-        <!-- CLICKABLE ORDER ROW -->
-        <tr onclick="toggleItems('items-1')">
-            <td class="orderid">AVOR-16150</td>
-            <td class="amount">36.0</td>
-            <td class="status">pending</td>
+        {% for order in data.orders %}
+        <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.total_amount }}</td>
+            <td>{{ order.status }}</td>
         </tr>
-
-        <!-- ITEMS ROW -->
-        <tr id="items-1" style="display:none;">
-            <td colspan="3">
-                <b>Items:</b>
-                <table width="100%">
-                    <thead>
-                        <tr>
-                            <th style="text-align:left;">Product</th>
-                            <th style="text-align:center;">Qty</th>
-                            <th style="text-align:right;">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td style="text-align:left;">TEA001</td>
-                            <td style="text-align:center;">2</td>
-                            <td style="text-align:right;">20.0</td>
-                        </tr>
-                        
-                        <tr>
-                            <td style="text-align:left;">TEA002</td>
-                            <td style="text-align:center;">1</td>
-                            <td style="text-align:right;">20.0</td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-
-        
+        {% endfor %}
     </table>
-    
+    {% endif %}
 </div>
 
 <div class="links">
@@ -160,17 +97,6 @@
     <a href="/view-orders?phone=1111111111">View by Phone</a>
     <a href="/view-orders?email=wrong@example.com">View Non-Existing</a>
 </div>
-
-<script>
-function toggleItems(id) {
-    var row = document.getElementById(id);
-    if (row.style.display === "none") {
-        row.style.display = "table-row";
-    } else {
-        row.style.display = "none";
-    }
-}
-</script>
 
 </body>
 </html>

@@ -2,29 +2,90 @@
 <html>
 <head>
     <title>Orders</title>
+    <style>
+        body
+         {
+            font-family: Arial;
+            padding: 20px;
+        }
+        .card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .order {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .items {
+            display: none;
+            margin-top: 10px;
+        }
+        
+    </style>
 </head>
 <body>
+    
+<h2>Customer Details</h2>
+
+
+<div class="card">
+    <p><b>Email:</b> {{ data.customer.email }}</p>
+
+    {% if data.customer.name and data.customer.name != "Unknown" %}
+    <p><b>Name:</b> {{ data.customer.name }}</p>
+    {% endif %}
+
+    {% if data.customer.phone %}
+    <p><b>Phone:</b> {{ data.customer.phone }}</p>
+    {% endif %}
+</div>
+
 
 <h2>Orders</h2>
 
-<table border="1" cellpadding="10">
-<tr>
-    <th>Order ID</th>
-    <th>Total</th>
-    <th>Status</th>
-</tr>
-
 {% for order in data.orders %}
-<tr>
-    <td>{{ order.order_id }}</td>
-    <td>{{ order.total_amount }}</td>
-    <td>{{ order.status }}</td>
-</tr>
+<div class="order">
+    <p><b>Order ID:</b> {{ order.order_id }}</p>
+    <p><b>Total:</b> ₹{{ order.total_amount }}</p>
+    <p><b>Status:</b> {{ order.status }}</p>
+
+    <button onclick="toggleItems('{{ order.order_id }}')">
+        View Items
+    </button>
+
+    <div id="items-{{ order.order_id }}" class="items">
+        <ul>
+            {% for item in order["items"] %}
+            <li>
+                {{ item.product_name }} - Qty: {{ item.quantity }} - ₹{{ item.price }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endfor %}
-</table>
 
 <br>
 <a href="/">Back to Home</a>
+
+<script>
+function toggleItems(orderId) {
+    var el = document.getElementById("items-" + orderId);
+    if (el.style.display === "none" || el.style.display === "") {
+        el.style.display = "block";
+    } else {
+        el.style.display = "none";
+    }
+}
+</script>
 
 </body>
 </html>
