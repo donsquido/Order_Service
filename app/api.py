@@ -1,16 +1,19 @@
-from flask import render_template
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from app.services import order_service
 import logging
 
 logger = logging.getLogger(__name__)
+
 api_bp = Blueprint('api', __name__)
+
 
 @api_bp.route('/ingest-orders', methods=['POST'])
 def ingest_orders():
     """Endpoint to fetch and store orders from external API"""
     logger.info("Ingest orders endpoint called")
+
     result = order_service.fetch_and_store_orders()
+
     return jsonify(result), 200 if result['status'] == 'success' else 500
 
 
@@ -18,13 +21,13 @@ def ingest_orders():
 def get_customer_orders(identifier):
     """Get customer orders by email or phone (path param version)"""
     logger.info(f"Fetching orders for customer: {identifier}")
-    
+
     customer_data = order_service.get_orders_by_customer(identifier)
-    
+
     if not customer_data:
         return jsonify({"error": "Customer not found"}), 404
-    
-    return jsonify(customer_data)
+
+    return jsonify(customer_data), 200
 
 
 @api_bp.route('/orders', methods=['GET'])
@@ -57,7 +60,9 @@ def health_check():
 # UI HOME PAGE
 @api_bp.route('/')
 def home_page():
-    # auto fetch data so recruiter doesn't need to run ingest
+    """Home page - auto fetch and display sample customer"""
+    
+    # Auto fetch data so recruiter doesn't need to run ingest manually
     order_service.fetch_and_store_orders()
 
     data = order_service.get_orders_by_customer("thomas@avantcha.com")
@@ -68,12 +73,16 @@ def home_page():
 # VIEW ORDERS (EMAIL / PHONE)
 @api_bp.route('/view-orders')
 def view_orders_page():
-    from flask import request
+    """View orders page via email or phone"""
 
     email = request.args.get("email")
     phone = request.args.get("phone")
 
     identifier = email or phone
+
+    if not identifier:
+        return render_template("error.html", message="Email or phone required")
+
     data = order_service.get_orders_by_customer(identifier)
 
     if not data:
