@@ -1,13 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Error</title>
+    <title>Error - Customer Not Found</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #d9534f; /* red for error */
+        }
+
+        button {
+            padding: 6px 12px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>{{ message }}</h2>
+<h1>Order Service Dashboard</h1>
 
-<a href="/">Back to Home</a>
+<div class="card">
+    <h2>Customer Not Found</h2>
+    <p>The requested customer record could not be located.</p>
+    <a href="/"><button>Back to Home</button></a>
+</div>
 
 </body>
 </html>

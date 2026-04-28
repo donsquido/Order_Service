@@ -46,10 +46,10 @@ def get_orders():
     data = order_service.get_orders_by_customer(identifier)
 
     if not data:
-        return jsonify({"error": "Customer not found"}), 404
+        return render_template("404.html"), 404
 
-    return jsonify(data), 200
 
+    return render_template("orders.html", data=data)
 
 @api_bp.route('/health', methods=['GET'])
 def health_check():
